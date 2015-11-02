@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="refresh" content="600">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>nitbotUI for IOT</title>
+
+	<meta name="description" content="User Interface Grafik Untuk perangkat IOT by nitbot.com">
+	<meta name="author" content="nitbot.com">
+
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<script type="text/javascript" src="js/jstorage.js"></script>
+	<script>
+		var japikey = '005d9063bc2a1cb4999ef67391f2ba42';
+		var objt = "tidak ada respon server, silahkan ulangi kembali";
+		function requestJSON(varon) {
+			var sisip = "";
+			switch(varon) {
+				case 1:
+				sisip='on1';
+				break;
+				case 2:
+				sisip='on2';
+				break;
+				case 3:
+				sisip='on3';
+				break;
+				case 4:
+				sisip='on4';
+				break;
+				case 5:
+				sisip='on5';
+				break;
+				case 6:
+				sisip='on6';
+				break;
+				case 7:
+				sisip='suhu';
+				break;
+				case 8:
+				sisip='kelembapan';
+				break;
+				case 9:
+				sisip='reset';
+				break;
+				default:
+				break;
+			}
+			var request = new XMLHttpRequest();
+
+			request.open('GET', 'http://api.geeknesia.com/api/attribute/'+sisip+'?api_key=005d9063bc2a1cb4999ef67391f2ba42');
+
+			request.onreadystatechange = function () {
+				var ubclass="default";
+				var flagOn="";
+				if (this.readyState === 4) {
+					console.log('Status:', this.status);
+					console.log('Headers:', this.getAllResponseHeaders());
+					console.log('Body:', this.responseText);
+					objt=jQuery.parseJSON(this.responseText);
+					switch(varon) {
+						case 1:
+						console.log('isi:',objt.output.attribute.on1);
+						flagOn = objt.output.attribute.on1;
+						ubclass = "bon1";
+						break;
+						case 2:
+						console.log('isi:',objt.output.attribute.on2);
+						flagOn = objt.output.attribute.on2;
+						ubclass = "bon2";
+						break;
+						case 3:
+						console.log('isi:',objt.output.attribute.on3);
+						flagOn = objt.output.attribute.on3;
+						ubclass = "bon3";
+						break;
+						case 4:
+						console.log('isi:',objt.output.attribute.on4);
+						flagOn = objt.output.attribute.on4;
+						ubclass = "bon4";
+						break;
+						case 5:
+						console.log('isi:',objt.output.attribute.on5);
+						flagOn = objt.output.attribute.on5;
+						ubclass = "bon5";
+						break;
+						case 6:
+						console.log('isi:',objt.output.attribute.on6);
+						flagOn = objt.output.attribute.on6;
+						ubclass = "bon6";
+						break;
+						case 7:
+						console.log('isi:',objt.output.attribute.suhu);
+						document.getElementById("suhu").innerHTML = objt.output.attribute.suhu;
+						break;
+						case 8:
+						console.log('isi:',objt.output.attribute.kelembapan);
+						document.getElementById("kelembapan").innerHTML = objt.output.attribute.kelembapan;
+						break;
+						case 9:
+						console.log('isi:',objt.output.attribute.reset);
+						flagOn = objt.output.attribute.reset;
+						ubclass = "breset";
+						default:
+						break;
+					}
+
+					if (flagOn===0) 
+					{
+						document.getElementById(ubclass).className = "danger";
+					}
+					else 
+					{
+						document.getElementById(ubclass).className = "success";
+					}
+					
+				}
+				
+			};
+
+			request.send();
+		}
+		function myFunction(varon, onoff) {
+			var request = new XMLHttpRequest();
+			var jsuhu = 30, jkelembapan = 60, jreset = 0, jstatus = 0,jon1=0, jon2=0, jon3=0, jon4=0, jon5=0, jon6 = 0;
+			switch(varon) {
+				case 1:
+				if (onoff) jon1=1;
+				else jon1=0;
+				break;
+				case 2:
+				if (onoff) jon2=1;
+				else jon2=0;
+				break;
+				case 3:
+				if (onoff) jon3=1;
+				else jon3=0;
+				break;
+				case 4:
+				if (onoff) jon4=1;
+				else jon4=0;
+				break;
+				case 5:
+				if (onoff) jon5=1;
+				else jon5=0;
+				break;
+				case 6:
+				if (onoff) jon6=1;
+				else jon6=0;
+				break;
+				case 9:
+				if (onoff) jreset=1;
+				else jreset=0;
+				break;
+				default:
+				break;
+			}
+			request.open('GET', 'http://api.geeknesia.com/api/data?api_key='+japikey+'&attributes=%7B'+
+				'%22suhu%22%3A'				+jsuhu+
+				'%2C%22kelembapan%22%3A'	+jkelembapan+
+				'%2C%22status%22%3A'		+jstatus+
+				'%2C%22reset%22%3A'			+jreset+
+				'%2C%22on1%22%3A'			+jon1+
+				'%2C%22on2%22%3A'			+jon2+
+				'%2C%22on3%22%3A'			+jon3+
+				'%2C%22on4%22%3A'			+jon4+
+				'%2C%22on5%22%3A'			+jon5+
+				'%2C%22on6%22%3A'			+jon6+
+				'%7D');
+
+			request.onreadystatechange = function () {
+				if (this.readyState === 4) {
+					console.log('Status:', this.status);
+					console.log('Headers:', this.getAllResponseHeaders());
+					console.log('Body:', this.responseText);
+				}
+			};
+
+			request.send();
+		}
+		function oneclick(varmana,data)
+		{
+			myFunction(varmana,data); 
+			requestJSON(varmana);
+		}
+	</script>
+</head>
+
+<body>
+
+	<script>
+		requestJSON(7);
+		requestJSON(8);
+		requestJSON(1);
+		requestJSON(2);
+		requestJSON(3);
+		requestJSON(4);
+		requestJSON(5);
+		requestJSON(6);
+	</script>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="jumbotron well">
+					<h2>
+						Selamat Datang di nitbotUI
+					</h2>
+					<p>
+						User Interface ini digunakan sebagai sarana pengendalian perangkat IoT (Internet of Things) dari Jauh menggunakan koneksi internet. Tunggu beberapa detik hingga nilai suhu dan kelembapan muncul.
+					</p>
+
+					<h2>Suhu </h2><h2 id="suhu">masih ambil data, tungguin sebentar</h2>
+					<h2>Kelembapan </h2><h2 id="kelembapan">masih ambil data, tungguin sebentar</h2>
+				</div>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>
+								Tekan 2 kali untuk eksekusi | Tombol Eksekusi (hijau = on, merah = off) | Status Hardware dilihat pada background (hijau = on, merah = off)
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id="bon1" class="danger">
+							<td>
+								<button type="button" class="btn btn-success" onclick="oneclick(1,1);">
+									Saklar 1
+								</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-danger" onclick="oneclick(1,0);">
+									Saklar 1
+								</button>
+							</td>
+						</tr>
+						<tr id="bon2" class="danger">
+							<td>
+								<button type="button" class="btn btn-success" onclick="oneclick(2,1);">
+									Saklar 2
+								</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-danger" onclick="oneclick(2,0);">
+									Saklar 2
+								</button>
+							</td>
+						</tr>
+						<tr id="bon3" class="danger">
+							<td>
+								<button type="button" class="btn btn-success" onclick="oneclick(3,1);">
+									Saklar 3
+								</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-danger" onclick="oneclick(3,0);">
+									Saklar 3
+								</button>
+							</td>
+						</tr>
+						<tr id="bon4" class="danger">
+							<td>
+								<button type="button" class="btn btn-success" onclick="oneclick(4,1);">
+									Saklar 4
+								</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-danger" onclick="oneclick(4,0);">
+									Saklar 4
+								</button>
+							</td>
+						</tr>
+						<tr id="bon5" class="danger">
+							<td>
+								<button type="button" class="btn btn-success" onclick="oneclick(5,1);">
+									Saklar 5
+								</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-danger" onclick="oneclick(5,0);">
+									Saklar 5
+								</button>
+							</td>
+						</tr>
+						<tr id="bon6" class="danger">
+							<td>
+								<button type="button" class="btn btn-success" onclick="oneclick(6,1);">
+									Saklar 6
+								</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-danger" onclick="oneclick(6,0);">
+									Saklar 6
+								</button>
+							</td>
+						</tr>
+						<tr id="breset" class="danger">
+							<td>
+								<button type="button" class="btn btn-danger" onclick="myFunction(9,1); 	requestJSON(9);">
+									RESET ALL
+								</button>
+							</td>
+							<td>
+								RESET ALL
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<form role="form">
+					<div class="form-group">
+
+						<label for="exampleInputEmail1">
+							Email address
+						</label>
+						<input type="email" class="form-control" id="exampleInputEmail1" />
+					</div>
+					<div class="form-group">
+
+						<label for="exampleInputPassword1">
+							API Key
+						</label>
+						<input type="password" class="form-control" id="exampleInputPassword1" />
+					</div>
+					<div class="checkbox">
+
+						<label>
+							<input type="checkbox" /> remember me
+						</label>
+					</div> 
+					<button type="submit" class="btn btn-success">
+						Save
+					</button>
+				</form> 
+			</div>
+		</div>
+	</div>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
+</body>
+</html>
