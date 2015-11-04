@@ -1,0 +1,25 @@
+/* IE (all versions) */
+/* ----------------------------------------- */
+.post-thumb .overlay { display:none;}
+.post-thumb:hover .overlay { display:block;}
+
+*+html article .post-info li {
+	position: relative;
+	line-height: 59px;
+	padding-top: 13px;
+	height: 86px;
+}
+*+html article .post-info li span {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	text-align: center;
+	top: 70px;
+}
+*+html .btn {
+	height: 37px;
+}
+.field {
+	padding-top: 14px!important;
+	height: 27px!important;
+}
