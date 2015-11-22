@@ -13,3 +13,6 @@ Jadi, OpenSource yang dimaksud ada 2 jenis.
 OpenSource hardware(jika sudah ada) dengan lisensi under a Creative Commons Attribution Share-Alike license yang mengijinkan baik personal maupun komersial boleh menurunkan karya dengan lisensi yang identik, tetapi pencipta/penggagas tetap diberikan kredit, misal (tetap menyebutkan NiTBotIoT / Ni'am Tamami).
 
 OpenSource source code yang menggunakan lisensi LGPL. Silahkan di cari di google :D
+
+Prosedur Pengembangan NiTBotIoT *** STILL UNDER CONSTRUCTION ***
+
