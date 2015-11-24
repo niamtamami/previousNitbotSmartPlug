@@ -1,0 +1,11 @@
+.project
+.pydevproject
+*.pyc
+.metadata
+.settings
+build/
+MANIFEST
+dist/
+.DS_Store
+*~
+
