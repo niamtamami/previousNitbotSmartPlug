@@ -1,7 +1,7 @@
 iot.nitbot.com
 Perangkat Smart Home "Open Source" berbasis Internet of Things 
 
-NiTBotIoT adalah perangkat smartHome "OpenSource" yang dikembangkan oleh putra putri Indonesia, yang pada awalnya ditelurkan di laboratorium Kontrol Cerdas dan Robotika, Politeknik Elektronika Negeri Surabaya. Untuk sementara masih dalam pengembangan software terlebih dahulu, dengan memanfaatkan hardware yang ada seperti intel galileo, raspberry pi dll.
+nitbot-iot adalah perangkat smartHome "OpenSource" yang dikembangkan oleh putra putri Indonesia, yang pada awalnya ditelurkan di laboratorium Kontrol Cerdas dan Robotika, Politeknik Elektronika Negeri Surabaya. Untuk sementara masih dalam pengembangan software terlebih dahulu, dengan memanfaatkan hardware yang ada seperti intel galileo, raspberry pi dll.
 
 Apa yang kami maksud "OpenSource"? Like the arduino,
 
@@ -10,9 +10,9 @@ The Arduino software is also open-source. The source code for the Java environme
 
 Jadi, OpenSource yang dimaksud ada 2 jenis. 
 
-OpenSource hardware(jika sudah ada) dengan lisensi under a Creative Commons Attribution Share-Alike license yang mengijinkan baik personal maupun komersial boleh menurunkan karya dengan lisensi yang identik, tetapi pencipta/penggagas tetap diberikan kredit, misal (tetap menyebutkan NiTBotIoT / Ni'am Tamami).
+OpenSource hardware(jika sudah ada) dengan lisensi under a Creative Commons Attribution Share-Alike license yang mengijinkan baik personal maupun komersial boleh menurunkan karya dengan lisensi yang identik, tetapi pencipta/penggagas tetap diberikan kredit, misal (tetap menyebutkan nitbot-iot team).
 
 OpenSource source code yang menggunakan lisensi LGPL. Silahkan di cari di google :D
 
-Prosedur Pengembangan NiTBotIoT *** STILL UNDER CONSTRUCTION ***
+Prosedur Pengembangan nitbot-iot http://www.blognitbot.com/2015/12/tutorial-pengembangan-nitbot-iot.html
 
