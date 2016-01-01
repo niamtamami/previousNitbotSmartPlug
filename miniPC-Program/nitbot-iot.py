@@ -1,3 +1,6 @@
+#nitbot-iot by nitbot team
+#tuliskan penjelasan program yang di buat
+
 debugMode=True 	#setting untuk menampilkan status eksekusi program
 
 import httplib, urllib2
@@ -8,16 +11,9 @@ import json
 
 APIkey=0	#deklarasi awal variabel APIKey sebelum ambil dari nitbot-iotConf.txt
 
-varSuhu = int(argv[1])
-varKelembapan = int(argv[2])
-varStatus=192
-varReset=1
-varon1=0
-varon2=0
-varon3=0
-varon4=0
-varon5=0
-varon6=0
+Suhu = int(argv[1])
+Kelembapan = int(argv[2])
+ReadON=0					#8bit coil
 
 def defineIO():
 	from wiringx86 import GPIOGalileoGen2 as GPIO
@@ -46,16 +42,22 @@ def checkBit(var, nbit):
 	return var & (1 << nbit)
 
 #setdata, 8 bit data on off berdasarkan variabel dataVar, LSB first
-def varSetByte(dataVar):
+def checkThenSetByte(dataVar):
 	for x in range(0,8):
 		if checkBit(dataVar,x)>0:
-			if debugMode:print("on")
-		    #state = gpio.HIGH
-		    #gpio.digitalWrite(x, state)
+			if debugMode:
+				print("on")
+			else:
+				state = gpio.HIGH
+				gpio.digitalWrite(x, state)
 		else: 
-			if debugMode:print("off")
-		    #state = gpio.LOW
-		    #gpio.digitalWrite(x, state)
+			if debugMode:
+				print("off")
+			else:
+				state = gpio.LOW
+				gpio.digitalWrite(x, state)
+	if debugMode:print("seharusnya setelah di set, disini dicek lagi benar2 on apa tidak")	    
+
 
 #baca file, kedepannya digunakan untuk entri data konfigurasi API key
 def readConf(file):
@@ -71,8 +73,8 @@ def readConf(file):
 		if debugMode: print "no such file"
 
 #request data status untuk melihat data perangkat yang on maupun yang off
-def requestData(APIkey,attributeData): 
-	urlKirim = 'http://api.geeknesia.com/api/attribute/rOn?api_key=' + APIkey
+def requestDataFromServer(APIkey,attributeData): 
+	urlKirim = 'http://api.geeknesia.com/api/attribute/'+attributeData+'?api_key=' + APIkey
 	f = urllib2.urlopen(urlKirim)
 	jsondata = json.loads(f.read())
 	varData = int(jsondata['output']['attribute'][attributeData])
@@ -80,18 +82,27 @@ def requestData(APIkey,attributeData):
 	print (varData)
 	return varData
 
+def sendData2Server(APIkey, Suhu, Kelembapan, ReadON):
+	urlKirim = 'http://api.geeknesia.com/api/data?api_key=' + APIkey + '&attributes={%22suhu%22:' + str(Suhu) + ',%22kelembapan%22:' + str(Kelembapan) + ',%22readon%22:' + str(ReadON) +'}'
+	f=urllib2.urlopen(urlKirim)
+	print f.read()
+
 #void setup()
 #baca konfigurasi APIkey, dsb
-if debugMode: print('mulai')
+if debugMode: 
+	print('mulai')
+else:
+	defineIO()
+
 APIkey = readConf('nitbot-iotConf.txt')
+ReadON=requestDataFromServer(APIkey,'readon')
+sendData2Server(APIkey, Suhu, Kelembapan, ReadON)
 
 #void loop()
 while True :
 	sleep(2)
 	print ("??")
-	urlKirim = 'http://api.geeknesia.com/api/data?api_key=' + APIkey + '&attributes={%22wSuhu%22:' + str(varSuhu) + ',%22wKelembapan%22:' + str(varKelembapan) + ',%22rOn%22:' + str(varStatus) + ',%22wOn%22:' + str(varReset) +'}'
-	f=urllib2.urlopen(urlKirim)
-	print f.read()
-	datakuwh = requestData(APIkey,'rOn')
-	varSetByte(datakuwh)
+	ReadON=requestDataFromServer(APIkey,'readon')
+	checkThenSetByte(ReadON)
+	sendData2Server(APIkey, Suhu, Kelembapan, ReadON)
 	print ("==")
