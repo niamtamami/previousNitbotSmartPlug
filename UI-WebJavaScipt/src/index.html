@@ -8,44 +8,62 @@
 
 	<title>nitbotUI for IOT</title>
 
-	<meta name="description" content="User Interface untuk perangkat IOT by nitbot.com :)">
+	<meta name="description" content="User Interface untuk perangkat IOT, nitbot-iot, by nitbot-iot team :)">
 	<meta name="author" content="nitbot.com">
 
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
+
 	<script type="text/javascript" src="js/jstorage.js"></script>
 	<script>
 		var japikey = '005d9063bc2a1cb4999ef67391f2ba42';
-		var objt = "tidak ada respon server, silahkan ulangi kembali";
-		function requestJSON(varon) {
+		var jemail = 'nitbot@nitbot.com';
+		var jsuhu = 28, jkelembapan = 60, jreadon = 0;
+
+		function simpanAPIkey(form){
+			japikey = form.APIkey.value;
+			jemail = form.email.value;
+			console.log('APIkey',japikey);
+			console.log('Email',jemail);
+			document.getElementById("loginFlag").className = "bg-success";
+		}
+
+		function reqDataFromServer(varon) {
 			var sisip = "";
 			switch(varon) {
+				case 0:
+				sisip='readon';
+				break;
 				case 1:
-				sisip='on1';
+				sisip='readon';
 				break;
 				case 2:
-				sisip='on2';
+				sisip='readon';
 				break;
 				case 3:
-				sisip='on3';
+				sisip='readon';
 				break;
 				case 4:
-				sisip='on4';
+				sisip='readon';
 				break;
 				case 5:
-				sisip='on5';
+				sisip='readon';
 				break;
 				case 6:
-				sisip='on6';
+				sisip='readon';
 				break;
 				case 7:
-				sisip='suhu';
+				sisip='readon';
 				break;
 				case 8:
-				sisip='kelembapan';
+				sisip='readon';
 				break;
 				case 9:
-				sisip='reset';
+				sisip='suhu';
+				break;
+				case 10:
+				sisip='kelembapan';
 				break;
 				default:
 				break;
@@ -63,52 +81,72 @@
 					console.log('Body:', this.responseText);
 					objt=jQuery.parseJSON(this.responseText);
 					switch(varon) {
+						case 0:
+						console.log('isi:',objt.output.attribute.readon);
+						flagOn = objt.output.attribute.readon;
+						ubclass = "breset";
+						break;
 						case 1:
-						console.log('isi:',objt.output.attribute.on1);
-						flagOn = objt.output.attribute.on1;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 1;
+						console.log('flagon1:',flagOn);
 						ubclass = "bon1";
 						break;
 						case 2:
-						console.log('isi:',objt.output.attribute.on2);
-						flagOn = objt.output.attribute.on2;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 2;
+						console.log('flagon2:',flagOn);
 						ubclass = "bon2";
 						break;
 						case 3:
-						console.log('isi:',objt.output.attribute.on3);
-						flagOn = objt.output.attribute.on3;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 4;
+						console.log('flagon3:',flagOn);
 						ubclass = "bon3";
 						break;
 						case 4:
-						console.log('isi:',objt.output.attribute.on4);
-						flagOn = objt.output.attribute.on4;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 8;
+						console.log('flagon4:',flagOn);
 						ubclass = "bon4";
 						break;
 						case 5:
-						console.log('isi:',objt.output.attribute.on5);
-						flagOn = objt.output.attribute.on5;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 16;
+						console.log('flagon5:',flagOn);
 						ubclass = "bon5";
 						break;
 						case 6:
-						console.log('isi:',objt.output.attribute.on6);
-						flagOn = objt.output.attribute.on6;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 32;
+						console.log('flagon6:',flagOn);
 						ubclass = "bon6";
 						break;
 						case 7:
-						console.log('isi:',objt.output.attribute.suhu);
-						document.getElementById("suhu").innerHTML = objt.output.attribute.suhu;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 64;
+						console.log('flagon7:',flagOn);
+						ubclass = "bon7";
 						break;
 						case 8:
-						console.log('isi:',objt.output.attribute.kelembapan);
-						document.getElementById("kelembapan").innerHTML = objt.output.attribute.kelembapan;
+						jreadon = parseInt(objt.output.attribute.readon);
+						flagOn = jreadon & 128;
+						console.log('flagon8:',flagOn);
+						ubclass = "bon8";
 						break;
 						case 9:
-						console.log('isi:',objt.output.attribute.reset);
-						flagOn = objt.output.attribute.reset;
-						ubclass = "breset";
+						console.log('isi:',objt.output.attribute.suhu);
+						jsuhu=parseInt(objt.output.attribute.suhu);
+						document.getElementById("suhu").innerHTML = objt.output.attribute.suhu;
+						break;
+						case 10:
+						console.log('isi:',objt.output.attribute.kelembapan);
+						jkelembapan=parseInt(objt.output.attribute.kelembapan);
+						document.getElementById("kelembapan").innerHTML = objt.output.attribute.kelembapan;
+						break;
 						default:
 						break;
 					}
-
 					if (flagOn===0) 
 					{
 						document.getElementById(ubclass).className = "danger";
@@ -117,44 +155,80 @@
 					{
 						document.getElementById(ubclass).className = "success";
 					}
-					
 				}
-				
 			};
-
 			request.send();
 		}
-		function myFunction(varon, onoff) {
+		function setData2Server(varon, onoff) {
 			var request = new XMLHttpRequest();
-			var jsuhu = 30, jkelembapan = 60, jreset = 0, jstatus = 0,jon1=0, jon2=0, jon3=0, jon4=0, jon5=0, jon6 = 0;
 			switch(varon) {
+				case 0:
+					if (onoff) jreadon=0;
+					else jreadon=0;
+				break;
 				case 1:
-				if (onoff) jon1=1;
-				else jon1=0;
+					if (onoff){ 
+						jreadon |=1;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~1; 
+						console.log('jreadon',jreadon);}
 				break;
 				case 2:
-				if (onoff) jon2=1;
-				else jon2=0;
+					if (onoff){ 
+						jreadon |=2;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~2; 
+						console.log('jreadon',jreadon);}
 				break;
 				case 3:
-				if (onoff) jon3=1;
-				else jon3=0;
+					if (onoff){ 
+						jreadon |=4;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~4; 
+						console.log('jreadon',jreadon);}
 				break;
 				case 4:
-				if (onoff) jon4=1;
-				else jon4=0;
+					if (onoff){ 
+						jreadon |=8;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~8; 
+						console.log('jreadon',jreadon);}
 				break;
 				case 5:
-				if (onoff) jon5=1;
-				else jon5=0;
+					if (onoff){ 
+						jreadon |=16;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~16; 
+						console.log('jreadon',jreadon);}
 				break;
 				case 6:
-				if (onoff) jon6=1;
-				else jon6=0;
+					if (onoff){ 
+						jreadon |=32;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~32; 
+						console.log('jreadon',jreadon);}
 				break;
-				case 9:
-				if (onoff) jreset=1;
-				else jreset=0;
+				case 7:
+					if (onoff){ 
+						jreadon |=64;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~64; 
+						console.log('jreadon',jreadon);}
+				break;
+				case 8:
+					if (onoff){ 
+						jreadon |=128;
+						console.log('jreadon',jreadon);}
+					else {
+						jreadon &=~128; 
+						console.log('jreadon',jreadon);}
 				break;
 				default:
 				break;
@@ -162,14 +236,7 @@
 			request.open('GET', 'http://api.geeknesia.com/api/data?api_key='+japikey+'&attributes=%7B'+
 				'%22suhu%22%3A'				+jsuhu+
 				'%2C%22kelembapan%22%3A'	+jkelembapan+
-				'%2C%22status%22%3A'		+jstatus+
-				'%2C%22reset%22%3A'			+jreset+
-				'%2C%22on1%22%3A'			+jon1+
-				'%2C%22on2%22%3A'			+jon2+
-				'%2C%22on3%22%3A'			+jon3+
-				'%2C%22on4%22%3A'			+jon4+
-				'%2C%22on5%22%3A'			+jon5+
-				'%2C%22on6%22%3A'			+jon6+
+				'%2C%22readon%22%3A'		+jreadon+
 				'%7D');
 
 			request.onreadystatechange = function () {
@@ -182,42 +249,91 @@
 
 			request.send();
 		}
-		function oneclick(varmana,data)
+		function oneClick(varmana,data)
 		{
-			myFunction(varmana,data); 
-			requestJSON(varmana);
+			setData2Server(varmana,data);
+			reqDataFromServer(varmana);
+		}
+		function resetAll()
+		{
+			oneClick(0,0);
+			reqDataFromServer(9);
+			reqDataFromServer(10);
+			reqDataFromServer(1);
+			reqDataFromServer(2);
+			reqDataFromServer(3);
+			reqDataFromServer(4);
+			reqDataFromServer(5);
+			reqDataFromServer(6);
+			reqDataFromServer(0);
 		}
 	</script>
 </head>
 
 <body>
-
-	<script>
-		requestJSON(7);
-		requestJSON(8);
-		requestJSON(1);
-		requestJSON(2);
-		requestJSON(3);
-		requestJSON(4);
-		requestJSON(5);
-		requestJSON(6);
-	</script>
-
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="jumbotron well">
 					<h2>
-						Selamat Datang di nitbotUI
+						Selamat Datang di nitbot-UI
 					</h2>
 					<p>
-						User Interface ini digunakan sebagai sarana pengendalian perangkat IoT (Internet of Things) dari Jauh menggunakan koneksi internet. Tunggu beberapa detik hingga nilai suhu dan kelembapan muncul.
+						User Interface ini digunakan sebagai sarana pengendalian perangkat nitbot-iot dari Jauh menggunakan koneksi internet.
 					</p>
-
+					<p id="loginFlag" class="bg-danger">
+						Konfigurasikan email dan APIkey terlebih dahulu pada button warna biru.
+					</p>
 					<h2>Suhu </h2><h2 id="suhu">masih ambil data, tungguin sebentar</h2>
 					<h2>Kelembapan </h2><h2 id="kelembapan">masih ambil data, tungguin sebentar</h2>
 				</div>
-
+				<div class="col-md-3">
+					<a id="modal-535218" href="#modal-container-535218" role="button" class="btn btn-primary" data-toggle="modal">Email dan APIkey Setting...</a>
+					<div class="modal fade" id="modal-container-535218" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+										×
+									</button>
+									<h4 class="modal-title" id="myModalLabel">
+										Isikan email dan APIkey untuk sinkronisasi dg nitbot-iot mu!
+									</h4>
+								</div>
+								<div class="modal-body">
+									<form role="form">
+										<div class="form-group">
+											<label for="exampleInputEmail1">
+												Email address
+											</label>
+											<input name="email" type="email" class="form-control" id="exampleInputEmail1" />
+										</div>
+										<div class="form-group">
+											<label for="exampleInputPassword1">
+												API Key
+											</label>
+											<input name="APIkey" type="password" class="form-control" id="exampleInputPassword1" />
+										</div>
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" /> remember me
+											</label>
+										</div> 
+										<button type="button" class="btn btn-default" data-dismiss="modal">
+											Close
+										</button> 
+										<button type="button" class="btn btn-primary" data-dismiss="modal" onClick="simpanAPIkey(this.form);resetAll();">
+											Save changes
+										</button>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<p>by nitbot-iot team</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<table class="table">
 					<thead>
 						<tr>
@@ -229,79 +345,79 @@
 					<tbody>
 						<tr id="bon1" class="danger">
 							<td>
-								<button type="button" class="btn btn-success" onclick="oneclick(1,1);">
+								<button type="button" class="btn btn-success" onclick="oneClick(1,1);">
 									Saklar 1
 								</button>
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger" onclick="oneclick(1,0);">
+								<button type="button" class="btn btn-danger" onclick="oneClick(1,0);">
 									Saklar 1
 								</button>
 							</td>
 						</tr>
 						<tr id="bon2" class="danger">
 							<td>
-								<button type="button" class="btn btn-success" onclick="oneclick(2,1);">
+								<button type="button" class="btn btn-success" onclick="oneClick(2,1);">
 									Saklar 2
 								</button>
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger" onclick="oneclick(2,0);">
+								<button type="button" class="btn btn-danger" onclick="oneClick(2,0);">
 									Saklar 2
 								</button>
 							</td>
 						</tr>
 						<tr id="bon3" class="danger">
 							<td>
-								<button type="button" class="btn btn-success" onclick="oneclick(3,1);">
+								<button type="button" class="btn btn-success" onclick="oneClick(3,1);">
 									Saklar 3
 								</button>
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger" onclick="oneclick(3,0);">
+								<button type="button" class="btn btn-danger" onclick="oneClick(3,0);">
 									Saklar 3
 								</button>
 							</td>
 						</tr>
 						<tr id="bon4" class="danger">
 							<td>
-								<button type="button" class="btn btn-success" onclick="oneclick(4,1);">
+								<button type="button" class="btn btn-success" onclick="oneClick(4,1);">
 									Saklar 4
 								</button>
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger" onclick="oneclick(4,0);">
+								<button type="button" class="btn btn-danger" onclick="oneClick(4,0);">
 									Saklar 4
 								</button>
 							</td>
 						</tr>
 						<tr id="bon5" class="danger">
 							<td>
-								<button type="button" class="btn btn-success" onclick="oneclick(5,1);">
+								<button type="button" class="btn btn-success" onclick="oneClick(5,1);">
 									Saklar 5
 								</button>
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger" onclick="oneclick(5,0);">
+								<button type="button" class="btn btn-danger" onclick="oneClick(5,0);">
 									Saklar 5
 								</button>
 							</td>
 						</tr>
 						<tr id="bon6" class="danger">
 							<td>
-								<button type="button" class="btn btn-success" onclick="oneclick(6,1);">
+								<button type="button" class="btn btn-success" onclick="oneClick(6,1);">
 									Saklar 6
 								</button>
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger" onclick="oneclick(6,0);">
+								<button type="button" class="btn btn-danger" onclick="oneClick(6,0);">
 									Saklar 6
 								</button>
 							</td>
 						</tr>
 						<tr id="breset" class="danger">
 							<td>
-								<button type="button" class="btn btn-danger" onclick="myFunction(9,1); 	requestJSON(9);">
+								<button type="button" class="btn btn-danger" onclick="resetAll()">
 									RESET ALL
 								</button>
 							</td>
@@ -310,36 +426,11 @@
 							</td>
 						</tr>
 					</tbody>
-				</table>
-				<form role="form">
-					<div class="form-group">
-
-						<label for="exampleInputEmail1">
-							Email address
-						</label>
-						<input type="email" class="form-control" id="exampleInputEmail1" />
-					</div>
-					<div class="form-group">
-
-						<label for="exampleInputPassword1">
-							API Key
-						</label>
-						<input type="password" class="form-control" id="exampleInputPassword1" />
-					</div>
-					<div class="checkbox">
-
-						<label>
-							<input type="checkbox" /> remember me
-						</label>
-					</div> 
-					<button type="submit" class="btn btn-success">
-						Save
-					</button>
-				</form> 
+				</table> 
 			</div>
 		</div>
+		by nitbot-iot team
 	</div>
-
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/scripts.js"></script>
