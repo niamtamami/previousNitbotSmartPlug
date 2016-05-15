@@ -20,10 +20,10 @@
     <script type="text/javascript" src="js/justgage.js"></script>
 
     <script>
-      var g1, g2, g3, g4;
+      var gsuhu, gdaya, g3, g4;
       window.onload = function(){
-        var g1 = new JustGage({
-          id: "g1",
+        var gsuhu = new JustGage({
+          id: "gsuhu",
           value: 0,
           min: 0,
           max: 100,
@@ -32,30 +32,177 @@
           label: "derajat"
         });
 
-        var g2 = new JustGage({
-          id: "g2",
+        var gdaya = new JustGage({
+          id: "gdaya",
           value: 0,
           min: 0,
           max: 100,
           donut: true,
-          title: "Daya Hari ini",
+          title: "Daya",
           label: "watt"
         });
 
         setInterval(function() {
-          g1.refresh(jsuhu);
-          g2.refresh(jkelembapan);
+          gsuhu.refresh(jsuhu);
+          gdaya.refresh(jkelembapan);
+          //encodingSwitchPacket(64,8,1);
+          reqDataFromAgnosthing();
+          //sendDataToAgnosthing();
         }, 2500);
       };
     </script>
 
-	<script>
-		$(document).ready(function() {
-			setInterval(function() {
-				checkAll();
-				}, 10000);
-			});
-	</script>
+    <script type="text/javascript">
+    	var destination;
+    	var source;
+    	var msgid;
+    	var data1;
+    	var data2;
+    	var data3;
+    	var extra;
+    	var checksum;
+
+    	var server;
+    	var iduser;
+    	var channel;
+
+    	function decodingSwitchPacket(varbyte, varon){
+    		switch(varon) {
+    			case 0:
+    			flagOn = varbyte & 0;
+    			break;
+    			case 1:
+    			flagOn = varbyte & 1;
+    			break;
+    			case 2:
+    			flagOn = varbyte & 2;
+    			break;
+    			case 3:
+    			flagOn = varbyte & 4;
+    			break;
+    			case 4:
+    			flagOn = varbyte & 8;
+    			break;
+    			case 5:
+    			flagOn = varbyte & 16;
+    			break;
+    			case 6:
+    			flagOn = varbyte & 32;
+    			break;
+    			case 7:
+    			flagOn = varbyte & 64;
+    			break;
+    			case 8:
+    			flagOn = varbyte & 128;
+    			break;
+    			default:
+    			break;
+    		}
+    		console.log("paketSwitch"+ varbyte + flagOn);
+    	}
+
+    	function encodingSwitchPacket(varbyte, varon, onoff) {
+			switch(varon) {
+				case 0:
+					if (onoff) varbyte=0;
+					else varbyte=0;
+				break;
+				case 1:
+					if (onoff) varbyte |=1;
+					else varbyte &=~1; 
+				break;
+				case 2:
+					if (onoff) varbyte |=2;
+					else varbyte &=~2; 
+				break;
+				case 3:
+					if (onoff) varbyte |=4;
+					else varbyte &=~4; 
+				break;
+				case 4:
+					if (onoff) varbyte |=8;
+					else varbyte &=~8; 
+				break;
+				case 5:
+					if (onoff) varbyte |=16;
+					else varbyte &=~16; 
+				break;
+				case 6:
+					if (onoff) varbyte |=32;
+					else varbyte &=~32; 
+				break;
+				case 7:
+					if (onoff) varbyte |=64;
+					else varbyte &=~64; 
+				break;
+				case 8:
+					if (onoff) varbyte |=128;
+					else varbyte &=~128; 
+				break;
+				default:
+				break;
+			}
+			console.log("paketSwitch"+ varbyte);
+		}
+
+    	function sendDataToAgnosthing() {
+		var paketdata = new XMLHttpRequest();
+			paketdata.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/feed?push=sou=254,des=255,mes=0,da1=130,da2=88,da3=187,ext=FFFF00AAAAAA,che=0');
+			paketdata.send();
+		}
+    	
+    	function reqDataFromAgnosthing() {
+		var source = new XMLHttpRequest();
+			source.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/sou');
+			source.onreadystatechange = function () {
+				console.log("source"+ this.responseText);
+			};
+			source.send();
+		var destination = new XMLHttpRequest();
+			destination.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/des');
+			destination.onreadystatechange = function () {
+				console.log("destination"+ this.responseText);
+			};
+			destination.send();
+		var msgid = new XMLHttpRequest();
+			msgid.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/mes');
+			msgid.onreadystatechange = function () {
+				console.log("msgid"+ this.responseText);
+			};
+			msgid.send();
+		var data1 = new XMLHttpRequest();
+			data1.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/da1');
+			data1.onreadystatechange = function () {
+				console.log("data1"+ this.responseText);
+			};
+			data1.send();
+		var data2 = new XMLHttpRequest();
+			data2.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/da2');
+			data2.onreadystatechange = function () {
+				console.log("data2"+ this.responseText);
+			};
+			data2.send();
+		var data3 = new XMLHttpRequest();
+			data3.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/da3');
+			data3.onreadystatechange = function () {
+				console.log("data3"+ this.responseText);
+			};
+			data3.send();
+		var extra = new XMLHttpRequest();
+			extra.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/ext');
+			extra.onreadystatechange = function () {
+				console.log("extra"+ this.responseText);
+			};
+			extra.send();
+		var checksum = new XMLHttpRequest();
+			checksum.open('GET', 'http://agnosthings.com/9744049c-18bf-11e6-8001-005056805279/field/last/feed/355/che');
+			checksum.onreadystatechange = function () {
+				console.log("checksum"+ this.responseText);
+			};
+			checksum.send();
+		}
+    </script>
+	
 	<script>
 		var japikey = '005d9063bc2a1cb4999ef67391f2ba42';
 		var jemail = 'nitbot@nitbot.com';
@@ -333,24 +480,17 @@
 
 						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul class="nav navbar-nav">
-								<li class="active">
-									<a href="#">Dashboard</a>
+								<li>
+									<a href="#suhudaya">Suhu dan Daya hari ini</a>
 								</li>
 								<li>
-									<a href="#">Penggunaan Daya</a>
+									<a href="#switch">On/Off Switch</a>
 								</li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pengaturan<strong class="caret"></strong></a>
-									<ul class="dropdown-menu">
-										<li>
-											<a href="#">Data Center</a>
-										</li>
-										<li>
-											<a href="#">Skalar</a>
-										</li>
-									</ul>
+								<li>
+									<a id="modal-535217" href="#modal-container-535217" data-toggle="modal" onclick="urlGetIFTTT();">Pengaturan Switch</a>
 								</li>
-								<li><a id="modal-535218" href="#modal-container-535218" data-toggle="modal"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+								<li>
+									<a id="modal-535218" href="#modal-container-535218" data-toggle="modal"><span class="glyphicon glyphicon-log-in"></span> Login</a>
 								</li>
 							</ul>
 						</div>
@@ -358,46 +498,22 @@
 				</div>
 				<div class="jumbotron well">
 					<h2>
-						Selamat Datang di nitbot-UI
+						nitbot-UI
 					</h2>
-					<p>
-						User Interface ini digunakan sebagai sarana pengendalian perangkat nitbot-iot dari Jauh menggunakan koneksi internet.
-					</p>
-					<p id="loginFlag" class="bg-danger">
-						Konfigurasikan email dan APIkey terlebih dahulu pada button warna biru.
-					</p>
-					<h2>Suhu </h2><h2 id="suhu">masih ambil data, tungguin sebentar</h2>
-					<h2>Kelembapan </h2><h2 id="kelembapan">masih ambil data, tungguin sebentar</h2>
 				</div>
-				<div>
-					<table class="table" >
-						<thead>
-							<tr>
-								<th>
-									Suhu
-								</th>
-								<th>
-									Daya Hari Ini
-								</th>
-							</tr>
-						</thead>			
-						<tbody>
-							<tr id="gauge">
-								<td align="center">
-									<div id="g1"></div>
-								</td>
-								<td align="center">
-									<div id="g2"></div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="container" id="suhudaya">
+					<div class="row-fluid">
+						<div class="col-sm-6" id="gsuhu">
+						</div>
+						<div class="col-sm-6" id="gdaya">
+						</div>
+					</div>
 				</div>
     			<div>
 					Tekan 2 kali untuk eksekusi | Tombol Eksekusi (hijau = on, merah = off) | Status Hardware dilihat pada background (hijau = on, merah = off)
 				</div>
 				<div>
-					<table class="table">			
+					<table class="table" id="switch">			
 						<thead>
 							<tr>
 								<th>
@@ -412,72 +528,72 @@
 							<tr id="bon1" class="danger">
 								<td>
 									<button type="button" class="btn btn-success" onclick="oneClick(1,1);">
-										Saklar 1
+										Switch 1
 									</button>
 								</td>
 								<td>
 									<button type="button" class="btn btn-danger" onclick="oneClick(1,0);">
-										Saklar 1
+										Switch 1
 									</button>
 								</td>
 							</tr>
 							<tr id="bon2" class="danger">
 								<td>
 									<button type="button" class="btn btn-success" onclick="oneClick(2,1);">
-										Saklar 2
+										Switch 2
 									</button>
 								</td>
 								<td>
 									<button type="button" class="btn btn-danger" onclick="oneClick(2,0);">
-										Saklar 2
+										Switch 2
 									</button>
 								</td>
 							</tr>
 							<tr id="bon3" class="danger">
 								<td>
 									<button type="button" class="btn btn-success" onclick="oneClick(3,1);">
-										Saklar 3
+										Switch 3
 									</button>
 								</td>
 								<td>
 									<button type="button" class="btn btn-danger" onclick="oneClick(3,0);">
-										Saklar 3
+										Switch 3
 									</button>
 								</td>
 							</tr>
 							<tr id="bon4" class="danger">
 								<td>
 									<button type="button" class="btn btn-success" onclick="oneClick(4,1);">
-										Saklar 4
+										Switch 4
 									</button>
 								</td>
 								<td>
 									<button type="button" class="btn btn-danger" onclick="oneClick(4,0);">
-										Saklar 4
+										Switch 4
 									</button>
 								</td>
 							</tr>
 							<tr id="bon5" class="danger">
 								<td>
 									<button type="button" class="btn btn-success" onclick="oneClick(5,1);">
-										Saklar 5
+										Switch 5
 									</button>
 								</td>
 								<td>
 									<button type="button" class="btn btn-danger" onclick="oneClick(5,0);">
-										Saklar 5
+										Switch 5
 									</button>
 								</td>
 							</tr>
 							<tr id="bon6" class="danger">
 								<td>
 									<button type="button" class="btn btn-success" onclick="oneClick(6,1);">
-										Saklar 6
+										Switch 6
 									</button>
 								</td>
 								<td>
 									<button type="button" class="btn btn-danger" onclick="oneClick(6,0);">
-										Saklar 6
+										Switch 6
 									</button>
 								</td>
 							</tr>
@@ -488,7 +604,12 @@
 									</button>
 								</td>
 								<td>
-									<a id="modal-535217" href="#modal-container-535217" role="button" class="btn btn-primary" data-toggle="modal" onclick="urlGetIFTTT();">IFTTT<span class="glyphicon glyphicon-cog"></a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+								</td>
+								<td>
 								</td>
 							</tr>
 						</tbody>
@@ -540,16 +661,19 @@
 						×
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						Isikan email dan APIkey untuk sinkronisasi dg nitbot-iot mu!
+						Isikan Data Center dan APIkey untuk sinkronisasi dg nitbot-iot mu!
 					</h4>
 				</div>
 				<div class="modal-body">
 					<form role="form">
 						<div class="form-group">
-							<label for="exampleInputEmail1">
-								Email address
-							</label>
-							<input name="email" type="email" class="form-control" id="exampleInputEmail1" />
+							<label for="sel1">Server list:</label>
+							<select class="form-control" id="sel1">
+								<option>Agnosthing</option>
+								<option>Geeknesia</option>
+								<option>Thinkspeak</option>
+								<option>Sparkfun</option>
+							</select>
 						</div>
 						<div class="form-group">
 							<label for="exampleInputPassword1">
@@ -576,5 +700,17 @@
 			</div>
 		</div>
 	</div>
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
